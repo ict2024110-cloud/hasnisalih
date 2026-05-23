@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hasni Salih — IT Undergraduate & Digital Strategist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #060612;
+    --bg2: #0c0c1e;
+    --bg3: #111128;
+    --indigo: #6366f1;
+    --indigo-bright: #818cf8;
+    --cyan: #22d3ee;
+    --white: #f0f0ff;
+    --muted: #8888aa;
+    --border: rgba(99,102,241,0.18);
+    --border-subtle: rgba(255,255,255,0.06);
+    --font-head: 'Sora', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* GLOW ORBS */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb-1 { width: 600px; height: 600px; background: rgba(99,102,241,0.12); top: -200px; right: -150px; }
+  .orb-2 { width: 400px; height: 400px; background: rgba(34,211,238,0.07); bottom: 10%; left: -100px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(6,6,18,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .nav-logo {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--indigo-bright), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  /* HAMBURGER */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+    background: none;
+    border: none;
+    z-index: 200;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* MOBILE MENU OVERLAY */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(6,6,18,0.97);
+    z-index: 99;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+    backdrop-filter: blur(20px);
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: var(--font-head);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--white); }
+
+  /* ── SECTIONS BASE ── */
+  section { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 4rem;
+    padding: 8rem 2.5rem 5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(99,102,241,0.12);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--indigo-bright);
+    text-transform: uppercase;
+    margin-bottom: 1.8rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--cyan);
+    border-radius: 50%;
+    animation: pulse 2s ease infinite;
+  }
+
+  h1 {
+    font-family: var(--font-head);
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 1.2rem;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  h1 span {
+    background: linear-gradient(135deg, var(--indigo-bright) 20%, var(--cyan) 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 440px;
+    line-height: 1.75;
+    margin-bottom: 2.2rem;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.85rem 1.8rem;
+    background: linear-gradient(135deg, var(--indigo), #4f46e5);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 30px rgba(99,102,241,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(99,102,241,0.45); }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.85rem 1.8rem;
+    background: transparent;
+    color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.05); border-color: rgba(99,102,241,0.4); }
+
+  .hero-socials {
+    display: flex;
+    gap: 1.2rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+  .social-link {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+  .social-link:hover { color: var(--indigo-bright); }
+
+  /* HERO PHOTO */
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeUp 0.7s 0.15s ease both;
+  }
+
+  .photo-frame {
+    position: relative;
+    width: 320px;
+    height: 380px;
+  }
+  .photo-bg-card {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(34,211,238,0.08));
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    transform: rotate(3deg);
+  }
+  .photo-img-wrap {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: linear-gradient(160deg, #1a1a3e 0%, #0c0c1e 100%);
+  }
+  .photo-tag {
+    position: absolute;
+    bottom: -14px;
+    left: -16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    backdrop-filter: blur(10px);
+    white-space: nowrap;
+  }
+  .photo-tag strong { color: var(--cyan); display: block; font-size: 1rem; }
+
+  .photo-tag2 {
+    position: absolute;
+    top: -14px;
+    right: -16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .photo-tag2 strong { color: var(--indigo-bright); display: block; font-size: 1rem; }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: var(--font-head);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--indigo-bright);
+    margin-bottom: 0.6rem;
+  }
+  h2 {
+    font-family: var(--font-head);
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  /* ── ABOUT ── */
+  #about {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 6rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .about-text p {
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 1.2rem;
+    font-size: 1.02rem;
+  }
+  .about-text p strong { color: var(--white); font-weight: 500; }
+
+  .edu-item {
+    position: relative;
+    padding-left: 1.5rem;
+    padding-bottom: 2rem;
+    border-left: 1px solid var(--border);
+  }
+  .edu-item::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 6px;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--indigo);
+    box-shadow: 0 0 12px rgba(99,102,241,0.6);
+  }
+  .edu-item:last-child { border-left-color: transparent; }
+  .edu-year {
+    font-size: 0.78rem;
+    color: var(--indigo-bright);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .edu-school {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 3px;
+  }
+  .edu-degree { font-size: 0.88rem; color: var(--muted); }
+
+  /* ── EXPERIENCE ── */
+  #experience {
+    padding: 6rem 2.5rem;
+    background: linear-gradient(180deg, transparent, var(--bg2) 20%, var(--bg2) 80%, transparent);
+  }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .exp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .exp-card {
+    background: var(--bg3);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .exp-card:hover { border-color: var(--border); transform: translateY(-4px); }
+  .exp-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--indigo), var(--cyan));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .exp-card:hover::before { opacity: 1; }
+
+  .exp-period {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--indigo-bright);
+    background: rgba(99,102,241,0.1);
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 1rem;
+  }
+  .exp-role {
+    font-family: var(--font-head);
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .exp-company { font-size: 0.85rem; color: var(--cyan); margin-bottom: 1rem; font-weight: 400; }
+  .exp-desc { font-size: 0.92rem; color: var(--muted); line-height: 1.75; font-weight: 300; }
+
+  /* ── SKILLS ── */
+  #skills { padding: 6rem 2.5rem; }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+  .skill-group {
+    background: var(--bg3);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: border-color 0.3s;
+  }
+  .skill-group:hover { border-color: var(--border); }
+  .skill-group-title {
+    font-family: var(--font-head);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .skill-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(99,102,241,0.08);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.84rem;
+    color: var(--white);
+    margin: 4px 4px 4px 0;
+    font-weight: 400;
+  }
+  .skill-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--cyan); flex-shrink: 0; }
+
+  /* ── CONTACT ── */
+  #contact {
+    padding: 6rem 2.5rem;
+    text-align: center;
+    background: linear-gradient(180deg, transparent, var(--bg2) 30%);
+  }
+  #contact h2 { margin-bottom: 0.8rem; }
+  .contact-sub {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 460px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+  }
+  .contact-methods {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+  .contact-card {
+    background: var(--bg3);
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    padding: 1rem 1.5rem;
+    font-size: 0.88rem;
+    color: var(--muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: border-color 0.2s, color 0.2s;
+    min-width: 200px;
+  }
+  .contact-card:hover { border-color: var(--border); color: var(--white); }
+  .contact-icon { font-size: 1.2rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(136,136,170,0.4);
+    font-size: 0.78rem;
+    border-top: 1px solid var(--border-subtle);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent);
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE — TABLET  (max 1024px)
+  ═══════════════════════════════════════════ */
+  @media (max-width: 1024px) {
+    #hero { gap: 2.5rem; padding: 8rem 2rem 5rem; }
+    #about { gap: 3rem; padding: 5rem 2rem; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE — MOBILE  (max 768px)
+  ═══════════════════════════════════════════ */
+  @media (max-width: 768px) {
+
+    /* NAV */
+    nav { padding: 1rem 1.2rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+
+    /* ORBS — smaller on mobile */
+    .orb-1 { width: 300px; height: 300px; top: -80px; right: -80px; }
+    .orb-2 { width: 200px; height: 200px; }
+
+    /* HERO */
+    #hero {
+      grid-template-columns: 1fr;
+      padding: 6.5rem 1.5rem 4rem;
+      text-align: center;
+      gap: 3.5rem;
+      min-height: auto;
+    }
+    .hero-text { order: 2; }
+    .hero-visual { order: 1; }
+    .hero-sub { max-width: 100%; margin-left: auto; margin-right: auto; }
+    .hero-ctas { justify-content: center; }
+    .hero-socials { justify-content: center; }
+    .hero-badge { margin-left: auto; margin-right: auto; }
+
+    /* PHOTO FRAME — smaller, tags repositioned */
+    .photo-frame { width: 220px; height: 260px; }
+    .photo-tag {
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.72rem;
+      padding: 8px 14px;
+      white-space: nowrap;
+    }
+    .photo-tag2 {
+      top: -10px;
+      right: 50%;
+      transform: translateX(50%);
+      font-size: 0.72rem;
+      padding: 8px 14px;
+      white-space: nowrap;
+    }
+
+    /* ABOUT */
+    #about {
+      grid-template-columns: 1fr;
+      padding: 4rem 1.5rem;
+      gap: 3rem;
+    }
+
+    /* EXPERIENCE */
+    #experience { padding: 4rem 1.5rem; }
+    .exp-grid { grid-template-columns: 1fr; }
+
+    /* SKILLS */
+    #skills { padding: 4rem 1.5rem; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+
+    /* CONTACT */
+    #contact { padding: 4rem 1.5rem; }
+    .contact-methods { flex-direction: column; align-items: stretch; }
+    .contact-card { min-width: 0; justify-content: center; }
+
+    /* BUTTONS */
+    .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
+    .hero-ctas { flex-direction: column; width: 100%; max-width: 320px; margin-left: auto; margin-right: auto; }
+  }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE — SMALL PHONES  (max 480px)
+  ═══════════════════════════════════════════ */
+  @media (max-width: 480px) {
+    #hero { padding: 6rem 1.2rem 3rem; }
+    #about { padding: 3rem 1.2rem; }
+    #experience { padding: 3rem 1.2rem; }
+    #skills { padding: 3rem 1.2rem; }
+    #contact { padding: 3rem 1.2rem; }
+
+    .skills-grid { grid-template-columns: 1fr; }
+    .exp-card { padding: 1.4rem; }
+
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.7rem; }
+    .hero-sub { font-size: 0.95rem; }
+
+    /* Stack photo tags vertically instead of overlapping */
+    .photo-tag { position: static; transform: none; margin-top: 1rem; display: inline-block; }
+    .photo-tag2 { position: static; transform: none; margin-bottom: 1rem; display: inline-block; }
+    .photo-frame { margin-top: 1.5rem; }
+    .hero-visual { flex-direction: column; align-items: center; }
+
+    footer { font-size: 0.72rem; padding: 1.5rem 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- MOBILE MENU OVERLAY -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#experience" onclick="closeMenu()">Experience</a>
+  <a href="#skills" onclick="closeMenu()">Skills</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Hasni Salih</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-text">
+    <div class="hero-badge">Available for opportunities</div>
+    <h1>Hi, I'm<br><span>Hasni Salih.</span></h1>
+    <p class="hero-sub">
+      IT undergraduate bridging the gap between <strong style="color:var(--white)">cutting-edge software</strong> and the businesses that need it — translating complex tech into real-world results.
+    </p>
+    <div class="hero-ctas">
+      <a href="#experience" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        View My Work
+      </a>
+      <a href="mailto:hasnisalihhs@gmail.com" class="btn-ghost">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        Get In Touch
+      </a>
+    </div>
+    <div class="hero-socials">
+      <a href="https://github.com/ict2024110-cloud" target="_blank" class="social-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        GitHub
+      </a>
+      <a href="mailto:hasnisalihhs@gmail.com" class="social-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        Email
+      </a>
+      <a href="tel:+94777429569" class="social-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.1a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.43h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.7a16 16 0 0 0 6.29 6.29l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        +94 777 429 569
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="photo-frame">
+      <div class="photo-bg-card"></div>
+      <div class="photo-img-wrap">
+        <img src="https://i.ibb.co/JWFzNCpt/1000600458-jpg.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top center;" alt="Hasni Salih">
+      </div>
+      <div class="photo-tag">
+        <strong>1st Year</strong>
+        B.Sc. IT · Rajarata University
+      </div>
+      <div class="photo-tag2">
+        <strong>Open to work</strong>
+        Freelance &amp; Internships
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-text reveal">
+    <p class="section-label">About Me</p>
+    <h2>Tech student.<br>Business veteran.</h2>
+    <p>I'm a first-year B.Sc. IT student at Rajarata University of Sri Lanka — and already a veteran of the real world. Before campus life, I spent over a year running daily operations at an architectural college and helping drive student enrollment through client-focused communication.</p>
+    <p>Alongside my studies, I run a <strong>freelance design studio</strong>, creating promotional flyers and marketing videos for businesses that want a stronger digital presence.</p>
+    <p>My goal is to become the person who helps businesses <strong>unlock their potential through smart digital solutions</strong> — combining the technical depth of IT with the practical instincts of someone who's worked in the field.</p>
+  </div>
+
+  <div class="about-edu reveal">
+    <p class="section-label">Education</p>
+    <div style="margin-top: 1.5rem;">
+      <div class="edu-item">
+        <div class="edu-year">2026 — Present</div>
+        <div class="edu-school">Rajarata University of Sri Lanka</div>
+        <div class="edu-degree">B.Sc. in Information Technology (Undergraduate) · 1st Year</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-year">2023 — 2024</div>
+        <div class="edu-school">Kattankudy Central College</div>
+        <div class="edu-degree">G.C.E. Advanced Level — Commerce Stream · 1A 2B</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-label">Experience</p>
+      <h2>Where I've made<br>an impact.</h2>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card reveal">
+        <span class="exp-period">2024 — 2025</span>
+        <div class="exp-role">Assistant Manager</div>
+        <div class="exp-company">aCADDemy College of Architectural Engineering Technology</div>
+        <p class="exp-desc">Ran the day-to-day operations of a growing college over a 1.5-year tenure. Boosted student enrollment through client-focused communication and relationship management. Wore many hats so the college never missed a beat.</p>
+      </div>
+      <div class="exp-card reveal">
+        <span class="exp-period">2026 — Present</span>
+        <div class="exp-role">Freelance Visual Editor</div>
+        <div class="exp-company">Independent · Remote</div>
+        <p class="exp-desc">Crafting promotional flyers and marketing videos that don't just look good — they convert. Serving clients across industries who want a stronger digital presence and deeper audience engagement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-label">Skills</p>
+      <h2>What I bring<br>to the table.</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group reveal">
+        <div class="skill-group-title">Business &amp; Sales</div>
+        <span class="skill-tag"><span class="skill-dot"></span>Tech Sales</span>
+        <span class="skill-tag"><span class="skill-dot"></span>Client Relations</span>
+        <span class="skill-tag"><span class="skill-dot"></span>Communication</span>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-title">Operations</div>
+        <span class="skill-tag"><span class="skill-dot"></span>Time Management</span>
+        <span class="skill-tag"><span class="skill-dot"></span>Remote Work</span>
+        <span class="skill-tag"><span class="skill-dot"></span>Digital Automation</span>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-title">Creative</div>
+        <span class="skill-tag"><span class="skill-dot"></span>Flyer Design</span>
+        <span class="skill-tag"><span class="skill-dot"></span>Video Editing</span>
+        <span class="skill-tag"><span class="skill-dot"></span>Content Strategy</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal">
+    <p class="section-label">Let's Connect</p>
+    <h2>Let's build something<br>together.</h2>
+    <p class="contact-sub">Whether you have a project in mind, a business to grow, or just want to connect — I'm one message away.</p>
+    <a href="mailto:hasnisalihhs@gmail.com" class="btn-primary" style="display:inline-flex; margin-bottom: 0;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      Send Me a Message
+    </a>
+    <div class="contact-methods">
+      <a href="mailto:hasnisalihhs@gmail.com" class="contact-card">
+        <span class="contact-icon">✉️</span>
+        hasnisalihhs@gmail.com
+      </a>
+      <a href="tel:+94777429569" class="contact-card">
+        <span class="contact-icon">📞</span>
+        +94 777 429 569
+      </a>
+      <a href="https://github.com/ict2024110-cloud" target="_blank" class="contact-card">
+        <span class="contact-icon">⚡</span>
+        github.com/ict2024110-cloud
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Hasni Salih · Designed with intention · Ready to deploy on GitHub Pages</p>
+</footer>
+
+<script>
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+  });
+
+  function closeMenu() {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Close menu on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.transitionDelay = (i * 0.05) + 's';
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
